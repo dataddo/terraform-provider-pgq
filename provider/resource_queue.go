@@ -116,7 +116,9 @@ func (r *queueResource) createCustomIndexesInTransaction(ctx context.Context, sc
 	if err != nil {
 		return fmt.Errorf("failed to begin transaction: %w", err)
 	}
-	defer tx.Rollback(ctx)
+	defer func() {
+		_ = tx.Rollback(ctx)
+	}()
 
 	if err := r.mgr.CreateCustomIndexes(ctx, tx, schema, name, indexes); err != nil {
 		return fmt.Errorf("failed to create custom indexes: %w", err)

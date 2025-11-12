@@ -36,10 +36,7 @@ func (q QueueName) Valid() bool {
 	}
 	// Must start with letter or underscore
 	first := s[0]
-	if !((first >= 'a' && first <= 'z') || (first >= 'A' && first <= 'Z') || first == '_') {
-		return false
-	}
-	return true
+	return (first >= 'a' && first <= 'z') || (first >= 'A' && first <= 'Z') || first == '_'
 }
 
 func (s SchemaName) Valid() bool { return QueueName(s).Valid() }

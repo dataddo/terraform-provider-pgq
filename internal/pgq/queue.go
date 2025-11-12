@@ -31,7 +31,9 @@ func (m *Manager) CreateSimple(ctx context.Context, schema SchemaName, name Queu
 	if err != nil {
 		return wrapErr("begin_tx", fqn, err)
 	}
-	defer tx.Rollback(ctx)
+	defer func() {
+		_ = tx.Rollback(ctx)
+	}()
 
 	if err := m.createTable(ctx, tx, schema, name, false); err != nil {
 		return err

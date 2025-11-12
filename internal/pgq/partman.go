@@ -36,7 +36,9 @@ func (m *Manager) CreatePartitioned(ctx context.Context, schema SchemaName, name
 	if err != nil {
 		return wrapErr("begin_tx", fqn, err)
 	}
-	defer tx.Rollback(ctx)
+	defer func() {
+		_ = tx.Rollback(ctx)
+	}()
 
 	if err := m.createTable(ctx, tx, schema, name, true); err != nil {
 		return err
@@ -92,7 +94,9 @@ func (m *Manager) setupPartman(ctx context.Context, schema SchemaName, name Queu
 	if err != nil {
 		return wrapPartmanErr("begin_tx", fqn, err)
 	}
-	defer tx.Rollback(ctx)
+	defer func() {
+		_ = tx.Rollback(ctx)
+	}()
 
 	_, err = tx.Exec(ctx, `
 		SELECT partman.create_parent(
